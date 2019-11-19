@@ -15,28 +15,28 @@ string stri = "dca##b##efg##h###";
 
 void createLeftChild(node* root, node* left, char data)
 {
-	root->left = left;
+	root->left   = left;
 	left->parent = root;
-	left->data = data;
-	left->left = NULL;
-	left->right = NULL;
+	left->data   = data;
+	left->left   = NULL;
+	left->right  = NULL;
 }
 
 void createRightChild(node* root, node* right, char data)
 {
-	root->right = right;
+	root->right   = right;
 	right->parent = root;
-	right->data = data;
-	right->left = NULL;
-	right->right = NULL;
+	right->data   = data;
+	right->left   = NULL;
+	right->right  = NULL;
 }
 
 
 node* create_tree(string str)
 {
-	node* T = (node*)malloc(sizeof(node));
-	T->data = str[0];
-	T->left = NULL;
+	node* T  = (node*)malloc(sizeof(node));
+	T->data  = str[0];
+	T->left  = NULL;
 	T->right = NULL;
 	//putchar(T->data);
 	stack<node*> stk;
@@ -80,17 +80,47 @@ node* create_tree(string str)
 	return T;
 }
 
-void later(node* root)
+//void post_order(node* root)
+//{
+//	if (root == NULL)
+//	{
+//		return;
+//	}
+//	else 
+//	{
+//		post_order(root->left);
+//		post_order(root->right);
+//		putchar(root->data);
+//	}
+//}
+
+void post_order(node* root)
 {
-	if (root == NULL)
-	{
-		return;
-	}
-	else 
-	{
-		later(root->left);
-		later(root->right);
-		putchar(root->data);
+	stack<node*> stk;
+	stk.push(root);
+	node* pre = NULL;
+	node* cur = NULL;
+	while (!stk.empty())
+	{	
+		cur = stk.top();
+		if((cur->left == NULL && cur->right == NULL) || (pre!=NULL&&((pre == cur->left)||(pre == cur->right))))
+		{
+			stk.pop();
+			putchar(cur->data);
+			pre = cur;
+		}
+		else 
+		{	
+			if (cur->right != NULL)
+			{
+				stk.push(cur->right);
+			}
+			if (cur->left != NULL)
+			{
+				stk.push(cur->left);
+			}
+		}
+		
 	}
 }
 
@@ -98,5 +128,5 @@ int main()
 {
 	node* T = create_tree(stri);
 	//putchar(T->left->data);
-	later(T);
+	post_order(T);
 }
