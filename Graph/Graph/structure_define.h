@@ -3,6 +3,7 @@
 #include<stdlib.h>
 #include<vector>
 #include<map>
+#include<queue>
 
 using namespace std;
 
@@ -26,13 +27,14 @@ public:
 	Edge(Vertex* v1, Vertex* v2, int w) :vertex1(v1), vertex2(v2), weight(w) {}
 };
 
-class graph
+class Graph
 {
+public:
 	int numV;       //number of vertexes
 	vector<Vertex*> vertices;                        //names of all vertices
 	vector<Edge*> edges;                            //stores all edges in graph
 
-	graph() {
+	Graph() {
 		numV = 0;
 	}
 	map<string, Vertex*> work;                      //all vertexes and their names
@@ -40,6 +42,7 @@ class graph
 	void MSTKruskal();                              //implements Kruskal's algo
 	map<string, pair<int, string> > Dijkstra(string start);//implements Dijkstra's algo
 	void BFS(const string&);                       //implements BFS
-	void addvertex(const string&);
-	void addedge(string& from, string& to,int cost);
+	void DFS(const string&);                       //implements DFS
+	void addvertex(const string&);                 //add vertex with name
+	void addedge(const string& from, const string& to,int cost);
 };
