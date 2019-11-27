@@ -39,6 +39,7 @@ public:
 		numV = 0;
 	}
 	map<string, Vertex*> work;                      //all vertexes and their names
+	map<int, Vertex*> node_index;
 	void MSTPrim(string);                           //implements Prim's algo
 	void MSTKruskal();                              //implements Kruskal's algo
 	map<string, pair<int, string> > Dijkstra(string start);//implements Dijkstra's algo

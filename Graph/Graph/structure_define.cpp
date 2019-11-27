@@ -30,11 +30,16 @@ void Graph::MSTPrim(string start)
 	vector<Vertex*> mini_nodes;
 
 	mini_nodes.push_back(work[start]);
-	for ()
+	Vertex* temp = work[start];
+	vector<pair<int, Vertex*>>::iterator iter;
+	int adj_index;                    //邻接表中的节点序号
+	int new_node_index;
+	int new_edge_index;
+	
+	while (mini_nodes.size() < numV)
 	{
-		Vertex* temp = work[start];
-		vector<pair<int, Vertex*>>::iterator iter;
-		int adj_index;
+		int cost_temp = -1;
+		//改动mst和lowcost
 		for (iter = temp->adj.begin(); iter != temp->adj.end(); iter++)
 		{
 			adj_index = (int)(iter->second->name[0]) - 65;
@@ -42,10 +47,38 @@ void Graph::MSTPrim(string start)
 			{
 				if (lowcost[adj_index] == -1 || lowcost[adj_index] >= iter->first)//当前点不可达 或 通过temp到达当前点的距离更近
 				{
-
+					lowcost[adj_index] = iter->first;
+					mst[adj_index] = temp->name[0] - 65;
 				}
 			}
 		}
+		for (int i = 0; i < numV; i++)
+		{
+			//cant reach                    already in mst                 smaller edge cost                      
+			if ((lowcost[i] != -1) && (lowcost[i] != 0) && ((lowcost[i] < cost_temp) || (cost_temp == -1)))
+			{
+				cost_temp = lowcost[i];
+				new_node_index = i;
+			}
+		}
+		for (int i = 0; i < edges.size(); i++)
+		{
+			if (((edges[i]->vertex1 == node_index[mst[new_node_index]]) && (edges[i]->vertex2 == node_index[new_node_index])) ||
+				((edges[i]->vertex2 == node_index[mst[new_node_index]]) && (edges[i]->vertex1 == node_index[new_node_index])))
+			{
+				new_edge_index = i;
+				break;
+			}
+		}
+		temp = node_index[new_node_index];
+		mini_nodes.push_back(temp);
+		mini_tree.push_back(edges[new_edge_index]);
+		lowcost[new_node_index] = 0;
+		mst[new_node_index] = 0;
+	}
+	for (int i = 0; i < mini_tree.size(); i++)
+	{
+		cout << mini_tree[i]->vertex1->name << "-->" << mini_tree[i]->vertex2->name << endl;
 	}
 }
 
@@ -162,6 +195,7 @@ void Graph::addvertex(const string& name)
 {
 	Vertex* v = new Vertex(name);
 	work[name] = v;                   //add to vertexes list
+	node_index[numV] = v;
 	vertices.push_back(v);
 	numV++;
 }

@@ -21,6 +21,6 @@ int main()
 	g.addedge("B", "D", 10);
 	g.addedge("C", "F", 6);
 	g.addedge("D", "E", 11);
-	g.MSTKruskal();
+	g.MSTPrim("A");
 	return 0;
 }
