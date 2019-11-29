@@ -14,6 +14,20 @@ void Vertex::print_neightbors()
 }
 
 
+unsigned int Graph::getIndex(string tar)
+{
+	int result = -1;
+	for (int i = 0; i < numV; i++)
+	{
+		if (node_index[i]->name == tar)
+		{
+			result = i;
+			break;
+		}
+	}
+	return result;
+}
+
 void Graph::MSTPrim(string start)
 {
 	int* lowcost = new int[numV];
@@ -135,6 +149,61 @@ void Graph::MSTKruskal()
 
 map<string, pair<int, string>> Graph::Dijkstra(string start)
 {
+	int* distance_from_source = new int[numV];       //从源点开始到对应点的cost
+	bool* found_node = new bool[numV];               //是否已进入uv集合
+	int* last_node = new int[numV];
+	int uv_count = 0;
+	map<string, pair<int, string>> result;  //string是经由pair->second走到的，距离源点距离为pair->first
+	for (int i = 0; i < numV; i++)
+	{
+		distance_from_source[i] = -1;
+		found_node[i] = false;
+	}
+	Vertex* temp_node = work[start];
+	found_node[getIndex(start)] = true;
+	distance_from_source[getIndex(start)] = 0;//到初始点的距离为0
+	uv_count++;
+	vector<pair<int, Vertex*>>::iterator iter;
+	while(uv_count < numV)
+	{
+		for (iter = temp_node->adj.begin(); iter != temp_node->adj.end(); iter++)
+		{
+			//源点到当前点的这个邻居不可达 或 源点到当前点的邻居的目前路线没有经过当前点到邻居的cost小
+			if (((distance_from_source[getIndex(temp_node->name)] + iter->first) <
+				distance_from_source[getIndex(iter->second->name)]) ||
+				distance_from_source[getIndex(iter->second->name)] == -1)
+			{
+				distance_from_source[getIndex(iter->second->name)] =
+					distance_from_source[getIndex(temp_node->name)] + iter->first;//更新路径
+				last_node[getIndex(iter->second->name)] = getIndex(temp_node->name);//通过temp_node到达其邻居
+			}
+		}
+		int nearest_node_index = -1;
+		int nearest_distance = -1;
+		//找最近的一个节点
+		for (int i = 0; i < numV; i++)
+		{
+			if (!found_node[i])//节点未加入uv集合
+			{
+				if (distance_from_source[i] != -1 &&
+					(distance_from_source[i] < nearest_distance ||
+						nearest_distance == -1))
+				{
+					nearest_distance = distance_from_source[i];
+					nearest_node_index = i;
+				}
+			}
+		}
+		found_node[nearest_node_index] = true;
+		result[node_index[nearest_node_index]->name] = make_pair(nearest_distance, node_index[last_node[nearest_node_index]]->name);
+		uv_count++;
+		temp_node = node_index[nearest_node_index];
+	}
+	map<string, pair<int, string>>::iterator cout_iter;
+	for (cout_iter = result.begin(); cout_iter !=result.end();cout_iter++)
+	{
+		cout << "node:" << cout_iter->first << " cost:" << cout_iter->second.first << " through:" << cout_iter->second.second<< endl;
+	}
 	return map<string, pair<int, string>>();
 }
 
