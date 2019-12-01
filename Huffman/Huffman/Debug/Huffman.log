@@ -1,4 +1,3 @@
 ﻿  Huffman.cpp
-  main.cpp
-  正在生成代码...
+D:\rehab\Huffman\Huffman\Huffman.cpp(22,20): warning C4018:  “<”: 有符号/无符号不匹配
   Huffman.vcxproj -> D:\rehab\Huffman\Debug\Huffman.exe
